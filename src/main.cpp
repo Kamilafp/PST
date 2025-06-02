@@ -22,18 +22,7 @@ void setup() {
 }
 
 void loop() {
-   int analogValue = analogRead(analogPin);
-
-  Serial.print("Analog Value: ");
-  Serial.print(analogValue);
-
-  if (analogValue < 500) {
-    Serial.println(" => RAIN DETECTED");
-  } else {
-    Serial.println(" => NO RAIN");
-  }
-
-  delay(500);
+   
   // Gerakan servo1: 0° → 180°
   servo1.writeMicroseconds(500);    // 0°
   servo2.writeMicroseconds(2500);   // Servo 2 tetap 180°
