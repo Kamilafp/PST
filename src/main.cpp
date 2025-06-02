@@ -36,12 +36,12 @@ void loop() {
   delay(500); 
 
   // Gerakan servo1: 0° → 180°
-  servo1.writeMicroseconds(500);    // 0°
+  servo1.writeMicroseconds(700);    // 0°
   servo2.writeMicroseconds(2500);   // Servo 2 tetap 180°
   delay(2000);
   
   // Gerakan servo2: 180° → 0°
   servo1.writeMicroseconds(2500);   // Servo 1 tetap 180°
-  servo2.writeMicroseconds(500);    // 0°
+  servo2.writeMicroseconds(700);    // 0°
   delay(2000);
 }
