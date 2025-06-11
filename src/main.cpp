@@ -1,47 +1,62 @@
 #include <Arduino.h>
+#include <DHT.h>
 #include <Servo.h>
 
-#define analogPin A0
-#define digitalPin 4
+// Konfigurasi DHT11
+#define DHTPIN 4         // D2 = GPIO4
+#define DHTTYPE DHT11
 
-// Deklarasi 2 servo
+DHT dht(DHTPIN, DHTTYPE);
+
+// Servo
+#define SERVO1_PIN 5     // D1 = GPIO5
+#define SERVO2_PIN 0     // D3 = GPIO0
+
 Servo servo1;
 Servo servo2;
 
+bool isHot = false;
+
 void setup() {
   Serial.begin(9600);
-  pinMode(digitalPin, INPUT);
-  // Kalibrasi servo dengan rentang mikrodetik (500-2500µs)
-  servo1.attach(D1, 500, 2500);  // Servo 1 di pin D1
-  servo2.attach(D3, 500, 2500);  // Servo 2 di pin D2
-  
-  // Inisialisasi posisi tengah (opsional)
-  servo1.writeMicroseconds(1500);  // 90°
-  servo2.writeMicroseconds(1500);  // 90°
+  dht.begin();
+
+  servo1.attach(SERVO1_PIN, 500, 2500);
+  servo2.attach(SERVO2_PIN, 500, 2500);
+
+  // Posisi awal
+  servo1.writeMicroseconds(700);   
+  servo2.writeMicroseconds(700);
   delay(1000);
 }
 
 void loop() {
-  int analogValue = analogRead(analogPin);
+  float temperature = dht.readTemperature();
 
-  Serial.print("Analog Value: ");
-  Serial.print(analogValue);
-
-  if (analogValue < 500) {
-    Serial.println(" => RAIN DETECTED");
-  } else {
-    Serial.println(" => NO RAIN");
+  if (isnan(temperature)) {
+    Serial.println("Gagal membaca dari sensor DHT!");
+    return;
   }
 
-  delay(500); 
+  Serial.print("Suhu: ");
+  Serial.print(temperature);
+  Serial.println(" °C");
 
-  // Gerakan servo1: 0° → 180°
-  servo1.writeMicroseconds(700);    // 0°
-  servo2.writeMicroseconds(2500);   // Servo 2 tetap 180°
-  delay(2000);
-  
-  // Gerakan servo2: 180° → 0°
-  servo1.writeMicroseconds(2500);   // Servo 1 tetap 180°
-  servo2.writeMicroseconds(700);    // 0°
+  if (temperature >= 29.0) {
+    if (!isHot) {
+      servo1.writeMicroseconds(2500);
+      servo2.writeMicroseconds(2500);
+      isHot = true;
+      Serial.println(">>> Suhu panas: Servo menutup kanopi");
+    }
+  } else {
+    if (isHot) {
+      servo1.writeMicroseconds(700);
+      servo2.writeMicroseconds(700);
+      isHot = false;
+      Serial.println(">>> Suhu normal: Servo membuka kanopi");
+    }
+  }
+
   delay(2000);
 }
