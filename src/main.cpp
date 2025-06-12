@@ -71,6 +71,7 @@ void bacaSensor() {
     // Non hujan
     // Buka jika cahaya cerah sedang, atau gelap sedang, else tutup
     if ((kondisiCahaya == "Cerah" && kondisiSuhu == "Sedang") ||
+        (kondisiCahaya == "Cerah" && kondisiSuhu == "Rendah") ||
         (kondisiCahaya == "Gelap" && kondisiSuhu == "Sedang")) {
       bukaKanopi();
     } else {
@@ -406,7 +407,7 @@ void setup() {
 
 // ====== Loop ======
 void loop() {
-  server.handleClient();  
+  server.handleClient();   
 
   // Update pembacaan sensor dan kendali servo secara berkala
   static unsigned long lastRead = 0;
