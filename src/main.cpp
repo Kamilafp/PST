@@ -5,8 +5,8 @@
 #include <ESP8266WebServer.h>
 
 // ====== WiFi Hotspot HP ======
-const char* ssid = "Laniisa";
-const char* password = "lanii220703";
+const char* ssid = "Belilah kuota";
+const char* password = "pusingkuotaabis";
 
 // ====== Pin Sensor & Aktuator ======
 #define DHTPIN D2
